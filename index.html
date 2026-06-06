@@ -1,0 +1,2077 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creato — Discover & Create</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --sky: #aee2ff;
+        --sand: #e1dcc9;
+        --sky-dark: #6ec8f5;
+        --sky-deeper: #2496c8;
+        --sand-dark: #c4bea5;
+        --sand-darker: #9a9280;
+        --ink: #1c1c1c;
+        --ink-muted: #5a5a5a;
+        --white: #ffffff;
+        --surface: #f7f5f0;
+        --radius-sm: 12px;
+        --radius-md: 18px;
+        --radius-lg: 24px;
+        --radius-pill: 999px;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--surface);
+        color: var(--ink);
+        min-height: 100vh;
+      }
+
+      /* NAV */
+      nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(247, 245, 240, 0.92);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--sand);
+        padding: 0 2rem;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      .nav-logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+        flex-shrink: 0;
+        text-decoration: none;
+      }
+      .nav-logo span {
+        color: var(--sky-deeper);
+      }
+
+      .search-bar {
+        flex: 1;
+        max-width: 520px;
+        position: relative;
+      }
+      .search-bar input {
+        width: 100%;
+        background: var(--sand);
+        border: none;
+        border-radius: var(--radius-pill);
+        padding: 0.55rem 2.6rem 0.55rem 2.8rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        color: var(--ink);
+        outline: none;
+        transition: background 0.2s;
+      }
+      .search-bar input::placeholder {
+        color: var(--sand-darker);
+      }
+      .search-bar input:focus {
+        background: var(--sand-dark);
+      }
+      .search-icon {
+        position: absolute;
+        left: 0.9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        opacity: 0.5;
+      }
+      .search-clear {
+        position: absolute;
+        right: 0.7rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 22px;
+        height: 22px;
+        border: none;
+        border-radius: 50%;
+        background: var(--sand-dark);
+        color: var(--ink-muted);
+        cursor: pointer;
+        font-size: 0.9rem;
+        line-height: 1;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        transition: background 0.15s;
+      }
+      .search-clear:hover {
+        background: var(--sand-darker);
+        color: var(--white);
+      }
+      .search-bar.has-text .search-clear {
+        display: flex;
+      }
+
+      .nav-actions {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: 1.5px solid var(--sand-dark);
+        border-radius: var(--radius-pill);
+        padding: 0.45rem 1.1rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--ink-muted);
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .btn-ghost:hover {
+        border-color: var(--sky-deeper);
+        color: var(--sky-deeper);
+      }
+
+      .btn-primary {
+        background: var(--sky-deeper);
+        border: none;
+        border-radius: var(--radius-pill);
+        padding: 0.5rem 1.3rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: white;
+        cursor: pointer;
+        transition:
+          background 0.18s,
+          transform 0.12s;
+      }
+      .btn-primary:hover {
+        background: #1a7fb0;
+      }
+      .btn-primary:active {
+        transform: scale(0.97);
+      }
+
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--sky);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--sky-deeper);
+        cursor: pointer;
+        border: 2px solid var(--sky-dark);
+        flex-shrink: 0;
+      }
+
+      /* TOPIC PILLS */
+      .topics {
+        padding: 0.8rem 2rem;
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--sand);
+        scrollbar-width: none;
+        background: var(--white);
+      }
+      .topics::-webkit-scrollbar {
+        display: none;
+      }
+
+      .topic-pill {
+        flex-shrink: 0;
+        background: var(--sand);
+        border: none;
+        border-radius: var(--radius-pill);
+        padding: 0.4rem 1rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--ink-muted);
+        cursor: pointer;
+        transition: all 0.16s;
+      }
+      .topic-pill:hover {
+        background: var(--sky);
+        color: var(--sky-deeper);
+      }
+      .topic-pill.active {
+        background: var(--sky-deeper);
+        color: white;
+      }
+
+      /* MAIN LAYOUT */
+      main {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      /* HERO BANNER */
+      .hero-banner {
+        background: linear-gradient(135deg, var(--sky) 0%, var(--sand) 100%);
+        border-radius: var(--radius-lg);
+        padding: 3rem 3rem 2.5rem;
+        margin-bottom: 2.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero-banner::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        background: rgba(174, 226, 255, 0.4);
+      }
+
+      .hero-banner::after {
+        content: "";
+        position: absolute;
+        bottom: -40px;
+        left: 30%;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(225, 220, 201, 0.5);
+      }
+
+      .hero-text {
+        position: relative;
+        z-index: 1;
+      }
+      .hero-eyebrow {
+        font-size: 0.78rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--sky-deeper);
+        margin-bottom: 0.75rem;
+      }
+      .hero-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        line-height: 1.15;
+        color: var(--ink);
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+      .hero-subtitle {
+        font-size: 1rem;
+        color: var(--ink-muted);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        max-width: 380px;
+      }
+      .hero-ctas {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+      .btn-hero {
+        background: var(--ink);
+        color: white;
+        border: none;
+        border-radius: var(--radius-pill);
+        padding: 0.7rem 1.6rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .btn-hero:hover {
+        background: var(--sky-deeper);
+        transform: translateY(-1px);
+      }
+      .btn-hero-outline {
+        background: transparent;
+        color: var(--ink);
+        border: 1.5px solid var(--ink);
+        border-radius: var(--radius-pill);
+        padding: 0.65rem 1.5rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.18s;
+      }
+      .btn-hero-outline:hover {
+        border-color: var(--sky-deeper);
+        color: var(--sky-deeper);
+      }
+
+      .hero-mosaic {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 100px);
+        gap: 8px;
+      }
+      .mosaic-card {
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .mosaic-card:hover {
+        transform: scale(1.03);
+      }
+      .mosaic-card:nth-child(1) {
+        grid-row: span 2;
+      }
+      .mosaic-card:nth-child(4) {
+        grid-column: span 2;
+      }
+
+      .mosaic-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .mosaic-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+      }
+      .m1 {
+        background: #b8d4e8;
+      }
+      .m2 {
+        background: #d4c9b0;
+      }
+      .m3 {
+        background: #a8dbb8;
+      }
+      .m4 {
+        background: #e8c4a8;
+      }
+      .m5 {
+        background: #c4b8e0;
+      }
+
+      /* SECTION HEADER */
+      .section-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+      }
+      .section-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+      }
+      .see-all {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--sky-deeper);
+        cursor: pointer;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.15s;
+      }
+      .see-all:hover {
+        border-color: var(--sky-deeper);
+      }
+
+      /* SEARCH STATUS BAR */
+      .search-status {
+        display: none;
+        align-items: center;
+        gap: 0.6rem;
+        background: var(--white);
+        border: 1px solid var(--sand);
+        border-radius: var(--radius-pill);
+        padding: 0.55rem 1.1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.88rem;
+        color: var(--ink-muted);
+      }
+      .search-status.visible {
+        display: flex;
+      }
+      .search-status strong {
+        color: var(--ink);
+      }
+      .search-status .clear-search {
+        margin-left: auto;
+        background: var(--sand);
+        border: none;
+        border-radius: var(--radius-pill);
+        padding: 0.3rem 0.9rem;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--ink-muted);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .search-status .clear-search:hover {
+        background: var(--sky);
+        color: var(--sky-deeper);
+      }
+
+      /* NO RESULTS */
+      .no-results {
+        display: none;
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--ink-muted);
+      }
+      .no-results.visible {
+        display: block;
+      }
+      .no-results .nr-emoji {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .no-results .nr-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 0.3rem;
+      }
+
+      /* PINTEREST MASONRY GRID */
+      .masonry {
+        columns: 5;
+        column-gap: 14px;
+        margin-bottom: 3rem;
+      }
+      @media (max-width: 1200px) {
+        .masonry {
+          columns: 4;
+        }
+      }
+      @media (max-width: 900px) {
+        .masonry {
+          columns: 3;
+        }
+      }
+      @media (max-width: 600px) {
+        .masonry {
+          columns: 2;
+        }
+      }
+
+      .pin-card {
+        break-inside: avoid;
+        margin-bottom: 14px;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        background: var(--white);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        transition:
+          transform 0.22s,
+          box-shadow 0.22s;
+        display: block;
+      }
+      .pin-card.hidden {
+        display: none;
+      }
+      .pin-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      }
+
+      .pin-image {
+        width: 100%;
+        display: block;
+        position: relative;
+      }
+      .pin-image .img-block {
+        width: 100%;
+        display: block;
+      }
+
+      .pin-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.2s;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 10px;
+      }
+      .pin-card:hover .pin-overlay {
+        background: rgba(0, 0, 0, 0.18);
+      }
+
+      .pin-top-actions {
+        display: flex;
+        justify-content: flex-end;
+        opacity: 0;
+        transition: opacity 0.2s;
+        gap: 6px;
+      }
+      .pin-card:hover .pin-top-actions {
+        opacity: 1;
+      }
+
+      .pin-action-btn {
+        background: white;
+        border: none;
+        border-radius: var(--radius-pill);
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+      }
+      .pin-action-btn:hover {
+        background: var(--sky);
+        transform: scale(1.1);
+      }
+      .pin-save-btn {
+        background: var(--sky-deeper);
+        color: white;
+        border: none;
+        border-radius: var(--radius-pill);
+        padding: 0 14px;
+        height: 32px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        cursor: pointer;
+        opacity: 0;
+        transition:
+          opacity 0.2s,
+          transform 0.12s;
+      }
+      .pin-card:hover .pin-save-btn {
+        opacity: 1;
+      }
+      .pin-save-btn:hover {
+        transform: scale(1.04);
+      }
+
+      .pin-meta {
+        padding: 10px 12px 12px;
+      }
+      .pin-title {
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: var(--ink);
+        line-height: 1.4;
+        margin-bottom: 4px;
+      }
+      .pin-author {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.73rem;
+        color: var(--ink-muted);
+      }
+      .pin-author-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.55rem;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+
+      /* hide the helper class used to mark sections we collapse during search */
+      .collapse-on-search.collapsed {
+        display: none;
+      }
+
+      /* FEATURED STRIP */
+      .featured-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 3rem;
+      }
+      @media (max-width: 900px) {
+        .featured-strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .feature-card {
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        transition: transform 0.22s;
+        aspect-ratio: 4/5;
+      }
+      .feature-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .feature-bg {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: flex-end;
+        padding: 1.2rem;
+        position: relative;
+      }
+
+      .feature-card-info {
+        position: relative;
+        z-index: 1;
+      }
+      .feature-label {
+        font-size: 0.72rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 4px;
+        opacity: 0.85;
+      }
+      .feature-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        line-height: 1.2;
+        color: white;
+      }
+
+      /* COLOR PALETTE BLOCKS */
+      .f1 {
+        background: linear-gradient(160deg, #7ec8e8 0%, #2496c8 100%);
+      }
+      .f2 {
+        background: linear-gradient(160deg, #d4c9b0 0%, #9a8e6e 100%);
+      }
+      .f3 {
+        background: linear-gradient(160deg, #a8cce0 0%, #567a96 100%);
+      }
+      .f4 {
+        background: linear-gradient(160deg, #e0d5b8 0%, #b09a78 100%);
+      }
+
+      /* BOARDS SECTION */
+      .boards-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-bottom: 3rem;
+      }
+      @media (max-width: 1000px) {
+        .boards-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .board-card {
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        cursor: pointer;
+        background: var(--white);
+        border: 1px solid var(--sand);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .board-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.09);
+      }
+
+      .board-preview {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        height: 100px;
+        gap: 2px;
+      }
+      .board-preview div {
+        background: var(--sand);
+      }
+      .board-preview div:first-child {
+        grid-row: span 2;
+        border-radius: 0;
+      }
+
+      .board-info {
+        padding: 10px 12px;
+      }
+      .board-name {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--ink);
+        margin-bottom: 2px;
+      }
+      .board-count {
+        font-size: 0.72rem;
+        color: var(--ink-muted);
+      }
+
+      /* BOTTOM CTA */
+      .bottom-cta {
+        background: var(--sky);
+        border-radius: var(--radius-lg);
+        padding: 3rem;
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .bottom-cta::before {
+        content: "";
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+      }
+      .bottom-cta::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        left: -30px;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(36, 150, 200, 0.15);
+      }
+      .bottom-cta-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 0.6rem;
+        position: relative;
+        z-index: 1;
+      }
+      .bottom-cta-sub {
+        font-size: 1rem;
+        color: var(--ink-muted);
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
+      }
+      .bottom-cta .btn-hero {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* FOOTER */
+      footer {
+        border-top: 1px solid var(--sand);
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .footer-logo {
+        font-family: "Playfair Display", serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .footer-logo span {
+        color: var(--sky-deeper);
+      }
+      .footer-links {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .footer-links a {
+        font-size: 0.8rem;
+        color: var(--ink-muted);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .footer-links a:hover {
+        color: var(--sky-deeper);
+      }
+      .footer-copy {
+        font-size: 0.75rem;
+        color: var(--sand-darker);
+      }
+
+      /* PIN HEIGHTS via color blocks */
+      .ph-short {
+        height: 160px;
+      }
+      .ph-med {
+        height: 220px;
+      }
+      .ph-tall {
+        height: 300px;
+      }
+      .ph-xtall {
+        height: 360px;
+      }
+
+      .tag-chip {
+        display: inline-block;
+        background: var(--sky);
+        color: var(--sky-deeper);
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: var(--radius-pill);
+        margin-bottom: 5px;
+      }
+
+      /* Save heart animation */
+      @keyframes heartPop {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.4);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .heart-pop {
+        animation: heartPop 0.3s ease;
+      }
+
+      /* Notification dot */
+      .notif-dot {
+        width: 8px;
+        height: 8px;
+        background: #e05050;
+        border-radius: 50%;
+        position: absolute;
+        top: 2px;
+        right: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <a class="nav-logo" href="#">Cre<span>a</span>to</a>
+      <div class="search-bar" id="searchBar">
+        <svg
+          class="search-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search ideas, boards, people…"
+          autocomplete="off"
+        />
+        <button class="search-clear" id="searchClear" aria-label="Clear search">
+          ✕
+        </button>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-ghost">Explore</button>
+        <button class="btn-ghost">Today</button>
+        <div style="position: relative">
+          <button class="btn-ghost" style="padding: 0.45rem 0.8rem">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+          </button>
+          <div class="notif-dot"></div>
+        </div>
+        <button class="btn-primary">+ Create</button>
+        <div class="avatar">JM</div>
+      </div>
+    </nav>
+
+    <!-- TOPIC PILLS -->
+    <div class="topics">
+      <button class="topic-pill active" data-topic="">All</button>
+      <button class="topic-pill" data-topic="trending">✦ Trending</button>
+      <button class="topic-pill" data-topic="interior design">
+        Interior Design
+      </button>
+      <button class="topic-pill" data-topic="fashion">Fashion</button>
+      <button class="topic-pill" data-topic="photography">Photography</button>
+      <button class="topic-pill" data-topic="architecture">Architecture</button>
+      <button class="topic-pill" data-topic="food">Food &amp; Drink</button>
+      <button class="topic-pill" data-topic="travel">Travel</button>
+      <button class="topic-pill" data-topic="art">
+        Art &amp; Illustration
+      </button>
+      <button class="topic-pill" data-topic="diy">DIY &amp; Crafts</button>
+      <button class="topic-pill" data-topic="nature">Nature</button>
+      <button class="topic-pill" data-topic="typography">Typography</button>
+      <button class="topic-pill" data-topic="minimal">Minimal Living</button>
+    </div>
+
+    <main>
+      <!-- HERO -->
+      <div class="hero-banner collapse-on-search">
+        <div class="hero-text">
+          <p class="hero-eyebrow">✦ A new kind of inspiration</p>
+          <h1 class="hero-title">Find ideas<br />worth saving.</h1>
+          <p class="hero-subtitle">
+            Curate the world's most beautiful ideas. Build boards. Share what
+            moves you.
+          </p>
+          <div class="hero-ctas">
+            <button class="btn-hero">Start collecting</button>
+            <button class="btn-hero-outline">Browse ideas</button>
+          </div>
+        </div>
+        <div class="hero-mosaic">
+          <div class="mosaic-card m1">
+            <img
+              src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"
+              alt="Mountain landscape"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+              "
+            />
+          </div>
+          <div class="mosaic-card m2">
+            <img
+              src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80"
+              alt="Interior design"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+              "
+            />
+          </div>
+          <div class="mosaic-card m3">
+            <img
+              src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80"
+              alt="Forest"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+              "
+            />
+          </div>
+          <div class="mosaic-card m4" style="grid-column: span 2">
+            <img
+              src="https://images.unsplash.com/photo-1541367777708-7905fe3296c0?w=600&q=80"
+              alt="Art"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+              "
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURED COLLECTIONS -->
+      <div class="section-header collapse-on-search">
+        <h2 class="section-title">Featured Collections</h2>
+        <a class="see-all" href="#">See all →</a>
+      </div>
+      <div class="featured-strip collapse-on-search">
+        <div class="feature-card">
+          <div
+            class="feature-bg"
+            style="
+              background: url(https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80)
+                center/cover no-repeat;
+              position: relative;
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                  to top,
+                  rgba(0, 0, 0, 0.55) 0%,
+                  rgba(0, 0, 0, 0) 60%
+                );
+                border-radius: inherit;
+              "
+            ></div>
+            <div class="feature-card-info">
+              <p class="feature-label">Living Spaces</p>
+              <p class="feature-title">Calm & Considered Interiors</p>
+            </div>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div
+            class="feature-bg"
+            style="
+              background: url(https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80)
+                center/cover no-repeat;
+              position: relative;
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                  to top,
+                  rgba(0, 0, 0, 0.55) 0%,
+                  rgba(0, 0, 0, 0) 60%
+                );
+                border-radius: inherit;
+              "
+            ></div>
+            <div class="feature-card-info">
+              <p class="feature-label">Wardrobe</p>
+              <p class="feature-title">Quiet Luxury Dressing</p>
+            </div>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div
+            class="feature-bg"
+            style="
+              background: url(https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=600&q=80)
+                center/cover no-repeat;
+              position: relative;
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                  to top,
+                  rgba(0, 0, 0, 0.55) 0%,
+                  rgba(0, 0, 0, 0) 60%
+                );
+                border-radius: inherit;
+              "
+            ></div>
+            <div class="feature-card-info">
+              <p class="feature-label">Architecture</p>
+              <p class="feature-title">Forms & Negative Space</p>
+            </div>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div
+            class="feature-bg"
+            style="
+              background: url(https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&q=80)
+                center/cover no-repeat;
+              position: relative;
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                  to top,
+                  rgba(0, 0, 0, 0.55) 0%,
+                  rgba(0, 0, 0, 0) 60%
+                );
+                border-radius: inherit;
+              "
+            ></div>
+            <div class="feature-card-info">
+              <p class="feature-label">Nature</p>
+              <p class="feature-title">Earthy Textures & Light</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOARDS -->
+      <div class="section-header collapse-on-search">
+        <h2 class="section-title">Boards you might love</h2>
+        <a class="see-all" href="#">See all →</a>
+      </div>
+      <div class="boards-grid collapse-on-search">
+        <div class="board-card">
+          <div class="board-preview">
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+          </div>
+          <div class="board-info">
+            <p class="board-name">Morning Light</p>
+            <p class="board-count">148 pins</p>
+          </div>
+        </div>
+        <div class="board-card">
+          <div class="board-preview">
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+          </div>
+          <div class="board-info">
+            <p class="board-name">Raw & Earthy</p>
+            <p class="board-count">312 pins</p>
+          </div>
+        </div>
+        <div class="board-card">
+          <div class="board-preview">
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1519046904884-53103b34b206?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+          </div>
+          <div class="board-info">
+            <p class="board-name">Coastal Moods</p>
+            <p class="board-count">97 pins</p>
+          </div>
+        </div>
+        <div class="board-card">
+          <div class="board-preview">
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+          </div>
+          <div class="board-info">
+            <p class="board-name">Garden Life</p>
+            <p class="board-count">224 pins</p>
+          </div>
+        </div>
+        <div class="board-card">
+          <div class="board-preview">
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div
+              style="
+                background: url(https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=200&q=70)
+                  center/cover no-repeat;
+              "
+            ></div>
+          </div>
+          <div class="board-info">
+            <p class="board-name">Desert Palette</p>
+            <p class="board-count">186 pins</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MASONRY PINS -->
+      <div class="section-header" id="pinsHeader">
+        <h2 class="section-title">Picked for you</h2>
+        <a class="see-all" href="#">Refresh ↻</a>
+      </div>
+
+      <!-- SEARCH STATUS -->
+      <div class="search-status" id="searchStatus">
+        <span id="searchStatusText"></span>
+        <button class="clear-search" id="clearSearchBtn">Clear search</button>
+      </div>
+
+      <!-- NO RESULTS -->
+      <div class="no-results" id="noResults">
+        <div class="nr-emoji">🔍</div>
+        <p class="nr-title">No ideas found</p>
+        <p>Try a different keyword like “photography”, “travel” or “nature”.</p>
+      </div>
+
+      <div class="masonry" id="masonryGrid">
+        <!-- PIN 1 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-tall"
+              style="
+                background: url(https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Photography</span>
+            <p class="pin-title">
+              Nordic coastline at dusk — blues and silhouettes
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #aee2ff; color: #2496c8"
+              >
+                AM
+              </div>
+              @arctic.mood
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 2 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-med"
+              style="
+                background: url(https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Ceramics</span>
+            <p class="pin-title">Handthrown stoneware with raw sand glaze</p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #e1dcc9; color: #6b6048"
+              >
+                KS
+              </div>
+              @kiln.studio
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 3 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-xtall"
+              style="
+                background: url(https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Architecture</span>
+            <p class="pin-title">
+              Travertine column hall, warm afternoon shadow play
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #c8dce8; color: #4a7a96"
+              >
+                RA
+              </div>
+              @roman.archi
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 4 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-short"
+              style="
+                background: url(https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Food</span>
+            <p class="pin-title">
+              Slow morning still life — linen, ceramic, light
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #f0e8d0; color: #7a6840"
+              >
+                NB
+              </div>
+              @nora.b
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 5 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-med"
+              style="
+                background: url(https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Nature</span>
+            <p class="pin-title">
+              Botanical corner, tropical leaves against plaster wall
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #b8e0c8; color: #2e7850"
+              >
+                GG
+              </div>
+              @greenhouse.g
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 6 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-tall"
+              style="
+                background: url(https://images.unsplash.com/photo-1541367777708-7905fe3296c0?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Art</span>
+            <p class="pin-title">
+              Abstract study — lavender fields and texture
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #d8c8e8; color: #6845a0"
+              >
+                LP
+              </div>
+              @l.paint
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 7 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-short"
+              style="
+                background: url(https://images.unsplash.com/photo-1533105079780-92b9be482077?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Travel</span>
+            <p class="pin-title">
+              Santorini terraced rooftops, deep blue horizon
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #aee2ff; color: #2496c8"
+              >
+                WT
+              </div>
+              @wandertales
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 8 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-xtall"
+              style="
+                background: url(https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Landscape</span>
+            <p class="pin-title">
+              Golden hour over the Namib — dunes like sculpture
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #e8d8c0; color: #8a6428"
+              >
+                DC
+              </div>
+              @dustcatcher
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 9 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-med"
+              style="
+                background: url(https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Food</span>
+            <p class="pin-title">
+              Mediterranean table — citrus, olive, stone surface
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #f0dcc8; color: #a05828"
+              >
+                FT
+              </div>
+              @fig.table
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 10 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-short"
+              style="
+                background: url(https://images.unsplash.com/photo-1478265409131-1f65c88f965c?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Nature</span>
+            <p class="pin-title">Frozen lake surface, geometric ice cracks</p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #c8e8f8; color: #2878a8"
+              >
+                IN
+              </div>
+              @ice.nordic
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 11 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-tall"
+              style="
+                background: url(https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Texture</span>
+            <p class="pin-title">
+              Dried grasses arranged in linen-wrapped vessel
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #e0e8c8; color: #5a7832"
+              >
+                SH
+              </div>
+              @straw.home
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 12 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-med"
+              style="
+                background: url(https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Typography</span>
+            <p class="pin-title">
+              Indigo letterpress poster — wave pattern grid type
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #aee2ff; color: #2496c8"
+              >
+                TY
+              </div>
+              @typo.yard
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 13 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-short"
+              style="
+                background: url(https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Interior Design</span>
+            <p class="pin-title">
+              Reading nook essentials — linen, light, calm
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #e8e0d0; color: #7a6840"
+              >
+                BN
+              </div>
+              @book.nook
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 14 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-xtall"
+              style="
+                background: url(https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Travel</span>
+            <p class="pin-title">
+              Norwegian fjord ferry — steel water, mist horizon
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #aee2ff; color: #2496c8"
+              >
+                FJ
+              </div>
+              @fjord.log
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 15 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-med"
+              style="
+                background: url(https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Lifestyle</span>
+            <p class="pin-title">
+              Candlelight dinner table, brushed linen tablecloth
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #f8e8d0; color: #9a7030"
+              >
+                EH
+              </div>
+              @eve.host
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 16 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-xtall"
+              style="
+                background: url(https://i.pinimg.com/736x/a7/90/63/a7906355f3c529bb061cbcda5c27492f.jpg)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">Fashion</span>
+            <p class="pin-title">
+              Tailored autumn layering — wool, leather, neutral tones
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #aee2ff; color: #2496c8"
+              >
+                SF
+              </div>
+              @style.folio
+            </div>
+          </div>
+        </div>
+
+        <!-- PIN 17 -->
+        <div class="pin-card">
+          <div class="pin-image">
+            <div
+              class="img-block ph-med"
+              style="
+                background: url(https://i.pinimg.com/736x/47/4e/3b/474e3b1a020fd4fe6aacc494acd20f50.jpg)
+                  center/cover no-repeat;
+              "
+            ></div>
+            <div class="pin-overlay">
+              <div class="pin-top-actions">
+                <button class="pin-save-btn">Save</button>
+                <button class="pin-action-btn">⋯</button>
+              </div>
+              <div></div>
+            </div>
+          </div>
+          <div class="pin-meta">
+            <span class="tag-chip">DIY &amp; Crafts</span>
+            <p class="pin-title">
+              Handmade macramé wall hanging, natural cotton cord
+            </p>
+            <div class="pin-author">
+              <div
+                class="pin-author-dot"
+                style="background: #f8e8d0; color: #9a7030"
+              >
+                MK
+              </div>
+              @make.it
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM CTA -->
+      <div class="bottom-cta collapse-on-search">
+        <h2 class="bottom-cta-title">Build your perfect board.</h2>
+        <p class="bottom-cta-sub">
+          Join millions of creators. Save and organise the ideas that inspire
+          you.
+        </p>
+        <button class="btn-hero">Create a free account</button>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-logo">Cre<span>a</span>to</div>
+      <div class="footer-links">
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="#">Press</a>
+        <a href="#">Advertising</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Help</a>
+      </div>
+      <p class="footer-copy">© 2026 Creato. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // ---------- SEARCH FEATURE ----------
+      const searchInput = document.getElementById("searchInput");
+      const searchBar = document.getElementById("searchBar");
+      const searchClear = document.getElementById("searchClear");
+      const searchStatus = document.getElementById("searchStatus");
+      const searchStatusText = document.getElementById("searchStatusText");
+      const clearSearchBtn = document.getElementById("clearSearchBtn");
+      const noResults = document.getElementById("noResults");
+      const pinsHeader = document.getElementById("pinsHeader");
+      const pinCards = Array.from(document.querySelectorAll(".pin-card"));
+      const collapsibles = Array.from(
+        document.querySelectorAll(".collapse-on-search"),
+      );
+
+      // Build a searchable text string for each pin once, up front.
+      pinCards.forEach((card) => {
+        const tag = (card.querySelector(".tag-chip")?.textContent || "").trim();
+        const title = (
+          card.querySelector(".pin-title")?.textContent || ""
+        ).trim();
+        const author = (
+          card.querySelector(".pin-author")?.textContent || ""
+        ).trim();
+        card.dataset.search = (tag + " " + title + " " + author).toLowerCase();
+      });
+
+      function runSearch(rawQuery) {
+        const query = rawQuery.trim().toLowerCase();
+        const searching = query.length > 0;
+
+        // Toggle the clear (✕) button inside the input
+        searchBar.classList.toggle("has-text", searching);
+
+        // When searching, hide hero / featured / boards / CTA so the
+        // matching pins take over the page.
+        collapsibles.forEach((el) =>
+          el.classList.toggle("collapsed", searching),
+        );
+
+        let matches = 0;
+        pinCards.forEach((card) => {
+          const isMatch = !searching || card.dataset.search.includes(query);
+          card.classList.toggle("hidden", !isMatch);
+          if (isMatch) matches++;
+        });
+
+        if (searching) {
+          pinsHeader.querySelector(".section-title").textContent =
+            'Results for "' + rawQuery.trim() + '"';
+          searchStatus.classList.add("visible");
+          searchStatusText.innerHTML =
+            "<strong>" +
+            matches +
+            "</strong> " +
+            (matches === 1 ? "idea" : "ideas") +
+            " found for “" +
+            rawQuery.trim() +
+            "”";
+          noResults.classList.toggle("visible", matches === 0);
+        } else {
+          pinsHeader.querySelector(".section-title").textContent =
+            "Picked for you";
+          searchStatus.classList.remove("visible");
+          noResults.classList.remove("visible");
+        }
+      }
+
+      function clearSearch() {
+        searchInput.value = "";
+        runSearch("");
+        // reset active pill to "All"
+        document
+          .querySelectorAll(".topic-pill")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelector('.topic-pill[data-topic=""]')
+          ?.classList.add("active");
+        searchInput.focus();
+      }
+
+      // Type-to-search (live)
+      searchInput.addEventListener("input", (e) => runSearch(e.target.value));
+
+      // Press Enter -> scroll to the results
+      searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          runSearch(searchInput.value);
+          pinsHeader.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+
+      searchClear.addEventListener("click", clearSearch);
+      clearSearchBtn.addEventListener("click", clearSearch);
+
+      // ---------- TOPIC PILLS drive the same search ----------
+      document.querySelectorAll(".topic-pill").forEach((pill) => {
+        pill.addEventListener("click", () => {
+          document
+            .querySelectorAll(".topic-pill")
+            .forEach((p) => p.classList.remove("active"));
+          pill.classList.add("active");
+
+          const topic = pill.dataset.topic || "";
+          searchInput.value = topic
+            ? pill.textContent.replace(/[^\w &]/g, "").trim()
+            : "";
+          runSearch(topic); // empty topic ("All") resets everything
+        });
+      });
+
+      // ---------- Save button interaction (unchanged) ----------
+      document.querySelectorAll(".pin-save-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const saved = btn.dataset.saved === "true";
+          if (!saved) {
+            btn.textContent = "✓ Saved";
+            btn.style.background = "#2e8050";
+            btn.dataset.saved = "true";
+          } else {
+            btn.textContent = "Save";
+            btn.style.background = "";
+            btn.dataset.saved = "false";
+          }
+        });
+      });
+
+      // ---------- Hover board preview colors (unchanged) ----------
+      document.querySelectorAll(".board-card").forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          card.querySelectorAll(".board-preview div").forEach((d) => {
+            d.style.transition = "filter 0.2s";
+            d.style.filter = "brightness(1.05)";
+          });
+        });
+        card.addEventListener("mouseleave", () => {
+          card.querySelectorAll(".board-preview div").forEach((d) => {
+            d.style.filter = "";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
